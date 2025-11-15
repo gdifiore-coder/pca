@@ -49,6 +49,26 @@ def read_rgt_data(filepath):
     pc1_loadings = df['PC1'].iloc[start_row:].values
     pc2_loadings = df['PC2'].iloc[start_row:].values
 
+    # Extract variance percentages if available
+    pc1_variance = None
+    pc2_variance = None
+    if 'Variances' in df.columns:
+        variances = df['Variances'].iloc[start_row:].values
+        for var in variances:
+            if pd.notna(var):
+                var_str = str(var)
+                if 'PC1' in var_str:
+                    # Extract percentage from "PC1=62.8" format
+                    try:
+                        pc1_variance = float(var_str.split('=')[1])
+                    except:
+                        pass
+                elif 'PC2' in var_str:
+                    try:
+                        pc2_variance = float(var_str.split('=')[1])
+                    except:
+                        pass
+
     # Remove any NaN values from loadings - require both PC1 and PC2
     valid_idx = ~(np.isnan(pc1_loadings) | np.isnan(pc2_loadings))
 
@@ -67,7 +87,9 @@ def read_rgt_data(filepath):
         'constructs': constructs,
         'ratings': ratings,
         'pc1_loadings': pc1_loadings,
-        'pc2_loadings': pc2_loadings
+        'pc2_loadings': pc2_loadings,
+        'pc1_variance': pc1_variance,
+        'pc2_variance': pc2_variance
     }
 
 def calculate_element_scores(ratings, pc1_loadings, pc2_loadings):
@@ -177,9 +199,17 @@ def create_biplot(data, title, output_path):
     ax.axvline(x=0, color='k', linestyle='--', linewidth=0.5, alpha=0.3, zorder=1)
     ax.grid(True, alpha=0.3, zorder=1)
 
-    # Labels and title
-    ax.set_xlabel('PC1', fontsize=12, weight='bold')
-    ax.set_ylabel('PC2', fontsize=12, weight='bold')
+    # Labels and title with variance percentages
+    pc1_label = 'PC1'
+    pc2_label = 'PC2'
+
+    if data.get('pc1_variance') is not None:
+        pc1_label = f'PC1 ({data["pc1_variance"]:.2f}%)'
+    if data.get('pc2_variance') is not None:
+        pc2_label = f'PC2 ({data["pc2_variance"]:.2f}%)'
+
+    ax.set_xlabel(pc1_label, fontsize=12, weight='bold')
+    ax.set_ylabel(pc2_label, fontsize=12, weight='bold')
     ax.set_title(title, fontsize=14, weight='bold', pad=20)
 
     # Legend
