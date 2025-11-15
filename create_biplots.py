@@ -46,8 +46,15 @@ def read_rgt_data(filepath):
     ratings = df.iloc[start_row:, element_indices].values.astype(float)
 
     # Extract PC1 and PC2 loadings
-    pc1_loadings = df['PC1'].iloc[start_row:].values
-    pc2_loadings = df['PC2'].iloc[start_row:].values
+    # For P1 Grid 2, use Colab PC1 and Colab PC2 if available
+    filename = os.path.basename(filepath)
+    if 'P1 Grid 2' in filename and 'Colab PC1' in df.columns and 'Colab PC2' in df.columns:
+        pc1_loadings = df['Colab PC1'].iloc[start_row:].values
+        pc2_loadings = df['Colab PC2'].iloc[start_row:].values
+        print(f"  Using Colab PC1 and Colab PC2 for {filename}")
+    else:
+        pc1_loadings = df['PC1'].iloc[start_row:].values
+        pc2_loadings = df['PC2'].iloc[start_row:].values
 
     # Extract variance percentages if available
     pc1_variance = None
