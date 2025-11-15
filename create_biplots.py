@@ -114,13 +114,15 @@ def calculate_element_scores(ratings, pc1_loadings, pc2_loadings):
 
     return scores
 
-def create_biplot(data, title, output_path, element_scale=1.0):
+def create_biplot(data, title, output_path, element_scale=1.0, pc1_component_label=None, pc2_component_label=None):
     """
     Create a biplot with element scores and construct loadings.
     Vectors are flipped (multiplied by -1) and labels are adjusted to avoid overlap.
 
     Args:
         element_scale: Scaling factor for element scores (default 1.0)
+        pc1_component_label: Custom bipolar label for PC1 component
+        pc2_component_label: Custom bipolar label for PC2 component
     """
     # Calculate element scores
     scores = calculate_element_scores(
@@ -212,7 +214,7 @@ def create_biplot(data, title, output_path, element_scale=1.0):
     ax.axvline(x=0, color='k', linestyle='--', linewidth=0.5, alpha=0.3, zorder=1)
     ax.grid(True, alpha=0.3, zorder=1)
 
-    # Labels and title with variance percentages
+    # Labels and title with variance percentages and component labels
     pc1_label = 'PC1'
     pc2_label = 'PC2'
 
@@ -221,8 +223,14 @@ def create_biplot(data, title, output_path, element_scale=1.0):
     if data.get('pc2_variance') is not None:
         pc2_label = f'PC2 ({data["pc2_variance"]:.2f}%)'
 
-    ax.set_xlabel(pc1_label, fontsize=12, weight='bold')
-    ax.set_ylabel(pc2_label, fontsize=12, weight='bold')
+    # Add component interpretation labels if provided
+    if pc1_component_label:
+        pc1_label = f'{pc1_label}: {pc1_component_label}'
+    if pc2_component_label:
+        pc2_label = f'{pc2_label}: {pc2_component_label}'
+
+    ax.set_xlabel(pc1_label, fontsize=11, weight='bold')
+    ax.set_ylabel(pc2_label, fontsize=11, weight='bold')
     ax.set_title(title, fontsize=14, weight='bold', pad=20)
 
     # Legend
@@ -238,6 +246,42 @@ def create_biplot(data, title, output_path, element_scale=1.0):
     return fig
 
 def main():
+    # Define component labels for each grid
+    component_labels = {
+        'P1 Grid 1': {
+            'pc1': 'Stimulating/Uppers ↔ Functionally Impairing',
+            'pc2': 'Pharmaceutical Grade ↔ Homemade'
+        },
+        'P1 Grid 2': {
+            'pc1': 'Prosocial/Connected/Authentic ↔ Antisocial/Poor Judgment',
+            'pc2': 'Demographically/Culturally Similar ↔ Different'
+        },
+        'P2 Grid 1': {
+            'pc1': 'Professional/Personal Familiarity ↔ Relaxation-Oriented',
+            'pc2': 'Natural/Liquid Form ↔ Stimulant/Dopaminergic'
+        },
+        'P2 Grid 2': {
+            'pc1': 'Prosocial/Educated/Stable ↔ Unstable/Narcissistic/Addicted',
+            'pc2': 'Masculine/Relational ↔ Feminine/Distant'
+        },
+        'P3 Grid 1': {
+            'pc1': 'Socially Accessible/Oral ↔ Productivity-Oriented',
+            'pc2': 'Social/Recreational ↔ Medical'
+        },
+        'P3 Grid 2': {
+            'pc1': 'Professionally/Ethically Aligned ↔ Misaligned',
+            'pc2': 'Personal/Close ↔ Professional/Skills-Based'
+        },
+        'P4 Grid 1': {
+            'pc1': 'Counterculture/Recreational ↔ High-Risk/Polydrug',
+            'pc2': 'Affordable/Accessible ↔ Legal/Licit'
+        },
+        'P4 Grid 2': {
+            'pc1': 'Compassionate/Culturally Aware ↔ Masculine/AUD/Dominating',
+            'pc2': 'Assertive/Culturally Competent ↔ Rigid/One-Size-Fits-All'
+        }
+    }
+
     # Find all CSV files
     csv_files = glob.glob('/home/user/pca/*.csv')
     csv_files.sort()
@@ -270,8 +314,20 @@ def main():
             # Apply scaling for P1 Grid 2 element scores
             element_scale = 1.5 if 'P1 Grid 2' in filename else 1.0
 
+            # Get component labels for this grid
+            pc1_comp_label = None
+            pc2_comp_label = None
+            for grid_key in component_labels.keys():
+                if grid_key in filename:
+                    pc1_comp_label = component_labels[grid_key]['pc1']
+                    pc2_comp_label = component_labels[grid_key]['pc2']
+                    break
+
             # Create biplot
-            fig = create_biplot(data, f"Biplot: {title}", output_path, element_scale=element_scale)
+            fig = create_biplot(data, f"Biplot: {title}", output_path,
+                              element_scale=element_scale,
+                              pc1_component_label=pc1_comp_label,
+                              pc2_component_label=pc2_comp_label)
             plt.close(fig)
 
             print(f"  ✓ Successfully created biplot")
