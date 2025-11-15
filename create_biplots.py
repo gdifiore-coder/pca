@@ -114,13 +114,14 @@ def calculate_element_scores(ratings, pc1_loadings, pc2_loadings):
 
     return scores
 
-def create_biplot(data, title, output_path, element_scale=1.0, pc1_component_label=None, pc2_component_label=None):
+def create_biplot(data, title, output_path, element_scale=1.0, vector_scale=3.0, pc1_component_label=None, pc2_component_label=None):
     """
     Create a biplot with element scores and construct loadings.
     Vectors are flipped (multiplied by -1) and labels are adjusted to avoid overlap.
 
     Args:
         element_scale: Scaling factor for element scores (default 1.0)
+        vector_scale: Scaling factor for construct loading vectors (default 3.0)
         pc1_component_label: Custom bipolar label for PC1 component
         pc2_component_label: Custom bipolar label for PC2 component
     """
@@ -154,7 +155,6 @@ def create_biplot(data, title, output_path, element_scale=1.0, pc1_component_lab
         element_texts.append(txt)
 
     # Plot construct loadings as vectors (flipped)
-    vector_scale = 3.0  # Scale factor for visibility
     construct_texts = []
 
     for i, construct in enumerate(data['constructs']):
@@ -314,6 +314,9 @@ def main():
             # Apply scaling for P1 Grid 2 element scores
             element_scale = 1.5 if 'P1 Grid 2' in filename else 1.0
 
+            # Apply increased vector scale for P1 Grid 2 (2)
+            vector_scale = 5.0 if 'P1 Grid 2 (2)' in filename else 3.0
+
             # Get component labels for this grid
             pc1_comp_label = None
             pc2_comp_label = None
@@ -326,6 +329,7 @@ def main():
             # Create biplot
             fig = create_biplot(data, f"Biplot: {title}", output_path,
                               element_scale=element_scale,
+                              vector_scale=vector_scale,
                               pc1_component_label=pc1_comp_label,
                               pc2_component_label=pc2_comp_label)
             plt.close(fig)
