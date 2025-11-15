@@ -274,7 +274,7 @@ def main():
         },
         'P4 Grid 1': {
             'pc1': 'Counterculture/Recreational ↔ High-Risk/Polydrug',
-            'pc2': 'Affordable/Accessible ↔ Legal/Licit'
+            'pc2': 'Affordable ↔ Expensive/Licit'
         },
         'P4 Grid 2': {
             'pc1': 'Compassionate/Culturally Aware ↔ Masculine/AUD/Dominating',
