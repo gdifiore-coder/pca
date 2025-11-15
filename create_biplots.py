@@ -107,10 +107,13 @@ def calculate_element_scores(ratings, pc1_loadings, pc2_loadings):
 
     return scores
 
-def create_biplot(data, title, output_path):
+def create_biplot(data, title, output_path, element_scale=1.0):
     """
     Create a biplot with element scores and construct loadings.
     Vectors are flipped (multiplied by -1) and labels are adjusted to avoid overlap.
+
+    Args:
+        element_scale: Scaling factor for element scores (default 1.0)
     """
     # Calculate element scores
     scores = calculate_element_scores(
@@ -118,6 +121,9 @@ def create_biplot(data, title, output_path):
         data['pc1_loadings'],
         data['pc2_loadings']
     )
+
+    # Scale element scores if requested
+    scores = scores * element_scale
 
     # Flip the loadings by -1
     pc1_loadings_flipped = -1 * data['pc1_loadings']
@@ -254,8 +260,11 @@ def main():
             # Output path
             output_path = os.path.join(output_dir, filename.replace('.csv', '_biplot.png'))
 
+            # Apply scaling for P1 Grid 2 element scores
+            element_scale = 1.5 if 'P1 Grid 2' in filename else 1.0
+
             # Create biplot
-            fig = create_biplot(data, f"Biplot: {title}", output_path)
+            fig = create_biplot(data, f"Biplot: {title}", output_path, element_scale=element_scale)
             plt.close(fig)
 
             print(f"  ✓ Successfully created biplot")

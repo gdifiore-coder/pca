@@ -1,0 +1,11 @@
+Emergent Pole,Self (1),Ideal Self (2),Strong Client Relationship (3),Difficult Client (4),Family w/SUD (5),Friend (6),Supervisor (7),Admired Colleague (8),Culturally Different Client (9),Disagreeable Colleague (10),PC1,PC2,Variances,Implicit Pole,,PC1 Loadings,PC2 Loadings
+Addict,5,4,1,1,2,5,5,5,2,4,-0.762,0.098,PC1=61.59,Non-Addict,,Positive,Positive
+Leadership Qualities,3,2,2,5,4,1,1,2,4,3,0.852,-0.194,PC2=14.91,Non-Leader,,Naturally Warm,Masculine
+"Likes Them, Invests Energy Into Relationship",1,1,2,3,3,2,3,2,2,4,0.577,0.658,,"Dislikes, Doesn't Invest",,Leadership,Likes and Invests Energy
+Naturally Warm and Empathetic,2,3,2,5,4,2,3,1,4,4,0.886,0.163,,"Blunt, Abrupt, Not Warm",,Educated,
+Masculine,4,4,5,1,5,1,5,3,1,4,-0.336,0.762,,Feminine,,Investing Energy,
+Mentally Unstable,4,4,3,1,2,4,4,5,3,2,-0.956,-0.203,,Mental Stability,,,
+Educated ,2,1,3,4,5,3,1,1,4,2,0.804,-0.251,,Not Educated,,Negative,Negative
+Narcissistic and Passive Aggressive,5,5,5,1,3,3.5,5,5,3,2,-0.911,0.021,,Agreeable and Selfless,,Mentally Unstable,
+,,,,,,,,,,,,,,,,Narcissistic,
+,,,,,,,,,,,,,,,,Addict,
